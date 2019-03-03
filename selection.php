@@ -22,7 +22,7 @@
 							$content .= set_right_input_type($field, $i++) . "<br />";
 						}
 						$content .= "\"";
-						echo "document.getElementById(\"fields\").innerHTML = " . $content . "; break;";
+						echo "document.getElementById(\"fields\").innerHTML = " . "\"<input type='hidden' name='table_name' value='\" + document.getElementById(\"tables\").value + \"'\" + " . $content . "; break;";
 					}
 					?>
 				}
@@ -33,7 +33,8 @@
 				$name = $field[0];
 				$type = $field[1];
 				$required = $field[2] == "NO" ? true : false;
-				$ret = "<label name='field_name_" . ($index) . "'>" . $name . "</label>";
+				
+				$ret = "<label>" . $name . "</label>";
 				if (strpos($type, "date") !== false) {
 					$ret .= "<input type='date' name='" . $name . "' " . ($required ? "required='required'" : "") . "/>" . ($required ? "*" : "");
 				} elseif (strpos($type, "varchar") !== false) {
@@ -43,6 +44,8 @@
 				} elseif (strpos($type, "int") !== false || strpos($type, "float") !== false || strpos($type, "double") !== false || strpos($type, "real") !== false) {
 					$ret .= "<input type='number' name='" . $name . "' " . ($required ? "required='required'" : "") . "/>" . ($required ? "*" : "");
 				}
+				$ret .= "<input type='hidden' name='field_name_" . ($index) . "' value='" . ($name) . "' />";
+				$ret .= "<input type='hidden' name='" . $name . "_type' value='" . $type . "' />";
 				
 				return $ret;
 			}

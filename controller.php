@@ -26,7 +26,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')  {
 			
 			$mysqli->close();
 		} elseif ($_POST["to_do"] == "insert") {
+			$post = $_POST;
+			$table_name = $post["table_name"];
+			$names = [];
+			$i = 0;
+			while (isset($post["field_name_" . ($i)])) {
+				$names[] = $post["field_name_" . ($i)];
+				$i++;
+			}
 			
+			$values = [];
+			$types = "";
+			foreach ($names as $name) {
+				$values[] = $post[$name];
+				$types.= get_right_type_for_mysqli($post[$name . "_type"]);
+			}
+			
+			$query = insert_query($table_name, $names);
+			$stmt = query($mysqli, $query, $types, $values);
+			echo "DONE";
 		}
 	} else {
 		$errorNo = "404";
